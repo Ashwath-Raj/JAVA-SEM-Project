@@ -1,0 +1,45 @@
+GLYVEX DEMO REDUCED-VOCABULARY RESULT
+=========================================
+
+Classes: B, C, E, F, L, S, T
+Initialization: transfer_from_62_class_epoch_21
+
+Train: 1610 images / 46 participants
+Val:   525 images / 15 participants
+Test:  560 images / 16 participants
+
+Best epoch:             6
+Best val accuracy:      0.996190
+Best val Macro-F1:      0.996190
+
+TEST ACCURACY:          0.996429
+TEST PRECISION (MACRO): 0.996516
+TEST RECALL (MACRO):    0.996429
+TEST MACRO-F1:          0.996428
+TEST WEIGHTED-F1:       0.996428
+TEST F0.5 MACRO:        0.996470
+TEST F2 MACRO:          0.996418
+
+ONNX: /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/demo_retrain/onnx/glyvex_demo_char_classifier.onnx
+ONNX max absolute logit difference: 0.00000191
+
+Confidence gate:
+  {
+  "policy": "accept top-1 prediction only when confidence >= threshold; otherwise reject",
+  "threshold": 0.98,
+  "validation_accepted_accuracy": 1.0,
+  "validation_coverage": 0.09904761904761905,
+  "validation_wrong_accepted": 0,
+  "validation_oov_false_accept_rate": 0.005090909090909091,
+  "validation_oov_samples": 4125,
+  "selection_rule": "lowest threshold with accepted accuracy >= 0.99 and OOV false-accept rate <= 0.01"
+}
+
+Input: float32 [batch,1,128,128]
+Normalize: (pixel/255 - 0.5) / 0.5
+Output: float32 logits [batch,7]
+Class order: B, C, E, F, L, S, T
+
+Java runtime policy:
+  ONNX -> softmax -> confidence gate -> class allowlist -> command registry
+  The model must never execute an OS command directly.

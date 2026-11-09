@@ -1,0 +1,23 @@
+{
+  "accuracy": 0.8423387096774193,
+  "balanced_accuracy": 0.8423387096774193,
+  "precision_macro": 0.849387747816326,
+  "recall_macro": 0.8423387096774193,
+  "precision_micro": 0.8423387096774193,
+  "recall_micro": 0.8423387096774193,
+  "precision_weighted": 0.8493877478163258,
+  "recall_weighted": 0.8423387096774193,
+  "f0.5_macro": 0.8429703249887138,
+  "f1_macro": 0.8389997940630461,
+  "f2_macro": 0.8396867072475231,
+  "f0.5_weighted": 0.8429703249887139,
+  "f1_weighted": 0.838999794063046,
+  "f2_weighted": 0.8396867072475231,
+  "mcc": 0.8400118871352492,
+  "cohen_kappa": 0.8397540983606557,
+  "top1_accuracy": 0.8423387096774193,
+  "top3_accuracy": 0.994758064516129,
+  "top5_accuracy": 0.9959677419354839,
+  "roc_auc_note": "Target scores need to be probabilities for multiclass roc_auc, i.e. they should sum up to 1.0 over classes",
+  "pr_auc_macro": 0.8831788947927635
+}

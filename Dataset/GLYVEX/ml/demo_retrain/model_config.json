@@ -1,0 +1,28 @@
+{
+  "architecture": "ResNet-18 grayscale, modified stem, reduced demo head",
+  "input": [
+    null,
+    1,
+    128,
+    128
+  ],
+  "classes": [
+    "B",
+    "C",
+    "E",
+    "F",
+    "L",
+    "S",
+    "T"
+  ],
+  "parameters": 11171271,
+  "device": "cuda",
+  "amp": true,
+  "initialization": "transfer_from_62_class_epoch_21",
+  "baseline_checkpoint": "/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/training/best_model.pt",
+  "optimizer": "AdamW",
+  "learning_rate": 0.0001,
+  "weight_decay": 0.0001,
+  "loss": "CrossEntropyLoss(label_smoothing=0.04)",
+  "seed": 20260930
+}

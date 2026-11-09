@@ -1,0 +1,52 @@
+GLYVEX MODEL AUDIT
+========================================================================
+
+FIT DIAGNOSTIC
+------------------------------------------------------------------------
+Best validation Macro-F1: epoch 21 = 0.831307
+Best validation accuracy: 0.833548
+Minimum validation loss: epoch 20 = 0.847346
+Final train Macro-F1: 0.922917
+Final val Macro-F1: 0.830872
+Final train-val F1 gap: 0.092044
+Heuristic overfitting onset: epoch 22
+
+TEST METRICS
+------------------------------------------------------------------------
+accuracy: 0.842339
+balanced_accuracy: 0.842339
+precision_macro: 0.849388
+recall_macro: 0.842339
+precision_micro: 0.842339
+recall_micro: 0.842339
+precision_weighted: 0.849388
+recall_weighted: 0.842339
+f0.5_macro: 0.842970
+f1_macro: 0.839000
+f2_macro: 0.839687
+f0.5_weighted: 0.842970
+f1_weighted: 0.839000
+f2_weighted: 0.839687
+mcc: 0.840012
+cohen_kappa: 0.839754
+top1_accuracy: 0.842339
+top3_accuracy: 0.994758
+top5_accuracy: 0.995968
+roc_auc_note: Target scores need to be probabilities for multiclass roc_auc, i.e. they should sum up to 1.0 over classes
+pr_auc_macro: 0.883179
+
+INTERPRETATION
+------------------------------------------------------------------------
+Training continued improving after validation peaked; an increasing generalization gap appears from about epoch 22. The saved best checkpoint at epoch 21 is preferable to the final epoch for deployment.
+F2 weights recall more heavily than F1; F0.5 weights precision more heavily.
+Macro averages treat all 62 classes equally; weighted averages reflect support.
+The held-out test set is evaluation-only and should not be used to choose a new checkpoint.
+
+FILES
+------------------------------------------------------------------------
+/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/audit/epoch_diagnostics.csv
+/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/audit/learning_curves.png
+/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/audit/confusion_matrix.png
+/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/audit/per_class_metrics.csv
+/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/audit/top_confusions.csv
+/home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/audit/metrics.json

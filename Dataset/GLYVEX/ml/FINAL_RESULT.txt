@@ -1,0 +1,33 @@
+GLYVEX CNN BASELINE — FINAL RESULT
+===================================
+
+Architecture: ResNet-18 adapted to 1-channel 128x128 inputs
+Classes: 62 (0-9, a-z, A-Z)
+
+Train: 14260 images / 46 participants
+Val:   4650 images / 15 participants
+Test:  4960 images / 16 participants
+
+Best epoch: 21
+Best val accuracy: 0.833118
+Best val macro-F1: 0.831307
+
+TEST ACCURACY:       0.842339
+TEST MACRO-F1:       0.839000
+TEST TOP-5 ACCURACY: 0.995968
+
+ONNX: /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/ml/onnx/glyvex_char_classifier.onnx
+ONNX Runtime max absolute logit difference: 0.00001144
+
+Deployment input:
+  float32 [batch,1,128,128]
+  normalized as (pixel/255 - 0.5) / 0.5
+
+Deployment output:
+  float32 logits [batch,62]
+  class order: 0-9, a-z, A-Z
+
+IMPORTANT:
+  The model recognizes characters; it must NOT directly execute commands.
+  Java should perform confidence gating and then route the recognized class
+  through the explicit GLYVEX allowlisted command registry.

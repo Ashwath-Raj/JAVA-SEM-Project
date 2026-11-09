@@ -1,0 +1,28 @@
+{
+  "best_epoch": 6,
+  "best_val_accuracy": 0.9961904761904762,
+  "best_val_macro_f1": 0.9961904761904761,
+  "test_accuracy": 0.9964285714285714,
+  "test_precision_macro": 0.9965156794425087,
+  "test_recall_macro": 0.9964285714285713,
+  "test_f1_macro": 0.9964280133056505,
+  "test_precision_weighted": 0.9965156794425086,
+  "test_recall_weighted": 0.9964285714285714,
+  "test_f1_weighted": 0.9964280133056505,
+  "test_f0_5_macro": 0.9964700165780599,
+  "test_f2_macro": 0.9964177675870468,
+  "test_f0_5_weighted": 0.9964700165780599,
+  "test_f2_weighted": 0.9964177675870468,
+  "test_samples": 560,
+  "training_minutes": 3.6426459272702534,
+  "classes": [
+    "B",
+    "C",
+    "E",
+    "F",
+    "L",
+    "S",
+    "T"
+  ],
+  "initialization": "transfer_from_62_class_epoch_21"
+}

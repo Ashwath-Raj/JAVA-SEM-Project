@@ -1,0 +1,76 @@
+.venv/
+.mlvenv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Raw dataset and generated images
+Dataset/DigiLeTs/
+Dataset/GLYVEX/.venv/
+Dataset/GLYVEX/.mlvenv/
+Dataset/GLYVEX/images/
+Dataset/GLYVEX/preview/
+
+# Training checkpoints and experiments
+*.pt
+*.pth
+*.ckpt
+Dataset/GLYVEX/ml/audit/
+Dataset/GLYVEX/ml/demo_retrain/checkpoints/
+
+# Keep deployable ONNX models and metadata
+!Dataset/GLYVEX/ml/demo_retrain/onnx/*.onnx
+!Dataset/GLYVEX/ml/demo_retrain/onnx/*.json
+
+# Build artifacts and runtime output
+target/
+out/
+build/
+glyvex-linux-touchpad/native/linux/touchpad/glyvex-touchpad
+**/runtime/debug/
+*.log
+
+# IDE and secrets
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# GLYVEX generated data
+Dataset/DigiLeTs/
+Dataset/GLYVEX/images/
+Dataset/GLYVEX/.venv/
+Dataset/GLYVEX/.mlvenv/
+
+# Model checkpoints - retain ONNX deployment models
+*.pt
+*.pth
+*.ckpt
+
+# Generated ML arrays
+*.npy
+
+# Java build outputs
+**/target/
+**/out/
+**/build/
+*.class
+*.jar
+
+# Native binaries
+glyvex-linux-touchpad/native/linux/touchpad/glyvex-touchpad
+*.o
+
+# Runtime captures and logs
+**/runtime/debug/
+**/touchpad_stream.log
+*.log
+
+# Python caches
+__pycache__/
+.pytest_cache/

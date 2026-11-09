@@ -1,0 +1,54 @@
+{
+  "classes": [
+    "B",
+    "C",
+    "E",
+    "F",
+    "L",
+    "S",
+    "T"
+  ],
+  "num_classes": 7,
+  "source_dataset_classes": 62,
+  "images": {
+    "train": 1610,
+    "val": 525,
+    "test": 560
+  },
+  "participants": {
+    "train": 46,
+    "val": 15,
+    "test": 16
+  },
+  "oov_validation_images": 4125,
+  "per_class_counts": {
+    "train": {
+      "B": 230,
+      "C": 230,
+      "E": 230,
+      "F": 230,
+      "L": 230,
+      "S": 230,
+      "T": 230
+    },
+    "val": {
+      "B": 75,
+      "C": 75,
+      "E": 75,
+      "F": 75,
+      "L": 75,
+      "S": 75,
+      "T": 75
+    },
+    "test": {
+      "B": 80,
+      "C": 80,
+      "E": 80,
+      "F": 80,
+      "L": 80,
+      "S": 80,
+      "T": 80
+    }
+  },
+  "split_policy": "unchanged participant-level split from baseline dataset"
+}

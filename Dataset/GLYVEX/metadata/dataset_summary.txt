@@ -1,0 +1,17 @@
+GLYVEX DigiLeTs Rasterized Dataset
+=================================
+Classes: 62
+Class order: 0-9, a-z, A-Z
+Participants: 77
+Instances per class per participant: 5
+Total images: 23870
+Canvas: 128x128, grayscale
+Features rasterized: x, y trajectory
+Not rasterized: pressure, timestamp
+Train participants: 46
+Validation participants: 15
+Test participants: 16
+Train images: 14260
+Validation images: 4650
+Test images: 4960
+Random seed: 20260927
