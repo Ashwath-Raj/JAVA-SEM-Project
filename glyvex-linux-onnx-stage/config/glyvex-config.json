@@ -1,0 +1,30 @@
+{
+  "activation": {
+    "sequence": ["TOP_LEFT", "TOP_RIGHT", "BOTTOM_RIGHT", "BOTTOM_LEFT"],
+    "cornerMargin": 0.28,
+    "interCornerTimeoutMillis": 4000,
+    "requireReleaseBetweenCorners": true
+  },
+  "capture": {
+    "inactivityTimeoutMillis": 850,
+    "maxGestureDurationMillis": 5000
+  },
+  "ml": {
+    "modelPath": "../Dataset/GLYVEX/ml/demo_retrain/onnx/glyvex_demo_char_classifier.onnx",
+    "classesPath": "../Dataset/GLYVEX/ml/demo_retrain/onnx/classes.json",
+    "gatePath": "../Dataset/GLYVEX/ml/demo_retrain/confidence_gate.json",
+    "overrideThreshold": 0.88
+  },
+  "commands": {
+    "C": ["gnome-calculator"],
+    "B": ["xdg-open", "https://google.com"],
+    "F": ["xdg-open", "."],
+    "T": ["x-terminal-emulator"],
+    "E": ["gedit"],
+    "L": ["loginctl", "lock-session"],
+    "S": ["gnome-control-center"]
+  },
+  "debugDir": "runtime/debug",
+  "dryRun": false,
+  "notificationsEnabled": true
+}

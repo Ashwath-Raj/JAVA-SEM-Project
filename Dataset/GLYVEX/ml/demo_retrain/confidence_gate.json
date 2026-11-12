@@ -1,0 +1,10 @@
+{
+  "policy": "accept top-1 prediction only when confidence >= threshold; otherwise reject",
+  "threshold": 0.98,
+  "validation_accepted_accuracy": 1.0,
+  "validation_coverage": 0.09904761904761905,
+  "validation_wrong_accepted": 0,
+  "validation_oov_false_accept_rate": 0.005090909090909091,
+  "validation_oov_samples": 4125,
+  "selection_rule": "lowest threshold with accepted accuracy >= 0.99 and OOV false-accept rate <= 0.01"
+}

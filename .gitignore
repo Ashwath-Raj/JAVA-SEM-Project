@@ -1,0 +1,107 @@
+# ==============================================================================
+# GLYVEX - Comprehensive .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Python & Virtual Environments
+# ------------------------------------------------------------------------------
+.venv/
+.mlvenv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ------------------------------------------------------------------------------
+# 2. Raw Datasets & Image Dumps (High Volume / Generated)
+# ------------------------------------------------------------------------------
+Dataset/DigiLeTs/
+Dataset/GLYVEX/.venv/
+Dataset/GLYVEX/.mlvenv/
+Dataset/GLYVEX/images/
+Dataset/GLYVEX/preview/
+
+# ------------------------------------------------------------------------------
+# 3. Model Training Checkpoints & Intermediate ML Outputs
+# ------------------------------------------------------------------------------
+*.pt
+*.pth
+*.ckpt
+*.npy
+Dataset/GLYVEX/ml/audit/
+Dataset/GLYVEX/ml/demo_retrain/checkpoints/
+
+# ------------------------------------------------------------------------------
+# 4. Deployable Production ONNX Models & Metadata (ALWAYS PRESERVED)
+# ------------------------------------------------------------------------------
+!Dataset/GLYVEX/ml/demo_retrain/onnx/*.onnx
+!Dataset/GLYVEX/ml/demo_retrain/onnx/*.json
+!Dataset/GLYVEX/ml/onnx/*.onnx
+!Dataset/GLYVEX/ml/onnx/*.json
+!Dataset/GLYVEX/ml/demo_retrain/confidence_gate.json
+
+# ------------------------------------------------------------------------------
+# 5. Java Build Artifacts & Compiled Classes
+# ------------------------------------------------------------------------------
+*.class
+**/target/classes/
+**/target/test-classes/
+**/target/generated-sources/
+**/target/maven-archiver/
+**/target/maven-status/
+**/target/*.jar
+**/target/*.war
+**/out/
+**/build/
+
+# Keep precomputed classpath for non-Maven standalone runner
+!**/target/classpath.txt
+
+# ------------------------------------------------------------------------------
+# 6. Native C Binaries & Compiled Objects
+# ------------------------------------------------------------------------------
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+glyvex-linux-touchpad/native/linux/touchpad/glyvex-touchpad
+**/glyvex-touchpad
+
+# ------------------------------------------------------------------------------
+# 7. Runtime Debug Captures & Execution Logs
+# ------------------------------------------------------------------------------
+runtime/
+**/runtime/
+**/runtime/debug/
+*.log
+**/touchpad_stream.log
+
+# ------------------------------------------------------------------------------
+# 8. IDE, OS, Editor & Secret Files
+# ------------------------------------------------------------------------------
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cer
+*.p12

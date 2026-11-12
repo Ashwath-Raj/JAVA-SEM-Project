@@ -1,0 +1,74 @@
+{
+  "model": "GLYVEX demo ResNet-18 grayscale character classifier",
+  "opset": 17,
+  "input_name": "input",
+  "output_name": "logits",
+  "input_shape": [
+    "batch",
+    1,
+    128,
+    128
+  ],
+  "input_dtype": "float32",
+  "normalization": {
+    "mean": [
+      0.5
+    ],
+    "std": [
+      0.5
+    ]
+  },
+  "classes": [
+    "B",
+    "C",
+    "E",
+    "F",
+    "L",
+    "S",
+    "T"
+  ],
+  "num_classes": 7,
+  "outputs_are": "logits; apply softmax in consumer",
+  "best_epoch": 6,
+  "best_val_accuracy": 0.9961904761904762,
+  "best_val_macro_f1": 0.9961904761904761,
+  "test_metrics": {
+    "best_epoch": 6,
+    "best_val_accuracy": 0.9961904761904762,
+    "best_val_macro_f1": 0.9961904761904761,
+    "test_accuracy": 0.9964285714285714,
+    "test_precision_macro": 0.9965156794425087,
+    "test_recall_macro": 0.9964285714285713,
+    "test_f1_macro": 0.9964280133056505,
+    "test_precision_weighted": 0.9965156794425086,
+    "test_recall_weighted": 0.9964285714285714,
+    "test_f1_weighted": 0.9964280133056505,
+    "test_f0_5_macro": 0.9964700165780599,
+    "test_f2_macro": 0.9964177675870468,
+    "test_f0_5_weighted": 0.9964700165780599,
+    "test_f2_weighted": 0.9964177675870468,
+    "test_samples": 560,
+    "training_minutes": 3.6426459272702534,
+    "classes": [
+      "B",
+      "C",
+      "E",
+      "F",
+      "L",
+      "S",
+      "T"
+    ],
+    "initialization": "transfer_from_62_class_epoch_21"
+  },
+  "confidence_gate": {
+    "policy": "accept top-1 prediction only when confidence >= threshold; otherwise reject",
+    "threshold": 0.98,
+    "validation_accepted_accuracy": 1.0,
+    "validation_coverage": 0.09904761904761905,
+    "validation_wrong_accepted": 0,
+    "validation_oov_false_accept_rate": 0.005090909090909091,
+    "validation_oov_samples": 4125,
+    "selection_rule": "lowest threshold with accepted accuracy >= 0.99 and OOV false-accept rate <= 0.01"
+  },
+  "onnx_max_absolute_logit_difference": 1.9073486328125e-06
+}

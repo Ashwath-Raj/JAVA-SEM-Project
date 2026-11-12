@@ -1,0 +1,49 @@
+Found 77 complete participant files.
+  converted 10/77 participants
+  converted 20/77 participants
+  converted 30/77 participants
+  converted 40/77 participants
+  converted 50/77 participants
+  converted 60/77 participants
+  converted 70/77 participants
+  converted 77/77 participants
+
+DATASET BUILD COMPLETE
+----------------------
+Participants : 77
+Classes      : 62
+Images       : 23870
+Train        : 46 participants / 14260 images
+Validation   : 15 participants / 4650 images
+Test         : 16 participants / 4960 images
+Metadata     : /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/metadata/images.csv
+Preview      : /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/preview/alphabet_grid.png
+
+============================================================
+FINAL GLYVEX DATASET CHECK
+============================================================
+Root: /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project
+DigiLeTs: /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/DigiLeTs
+GLYVEX: /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX
+Python: Python 3.14.4
+NumPy: 2.5.3
+Pillow: 12.3.0
+
+Important:
+  - No pressure input is used.
+  - No timestamp input is used.
+  - Stroke boundaries are retained during rasterization.
+  - Train/val/test split is participant-level.
+
+Preview:
+  /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/preview/alphabet_grid.png
+
+Metadata:
+  /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/metadata/images.csv
+  /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/metadata/participant_split.csv
+  /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/metadata/class_map.csv
+  /home/ashwathraj/Acadimics/3.Semister3/Projects/JAVA sem project/Dataset/GLYVEX/metadata/dataset_summary.txt
+
+============================================================
+SETUP COMPLETE
+============================================================
