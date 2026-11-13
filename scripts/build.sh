@@ -1,41 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$ROOT"
-
-echo "============================================================"
-echo "GLYVEX: BUILDING APPLICATION & NATIVE COMPONENTS"
-echo "============================================================"
-
-# 1. Compile C evdev Touchpad Bridge
-NATIVE_DIR="$ROOT/glyvex-linux-touchpad/native/linux/touchpad"
-NATIVE_SRC="$NATIVE_DIR/glyvex_touchpad.c"
-NATIVE_BIN="$NATIVE_DIR/glyvex-touchpad"
-
-echo "[1/3] Compiling native Linux touchpad reader ($NATIVE_SRC)..."
-gcc -Wall -Wextra -O2 "$NATIVE_SRC" -o "$NATIVE_BIN"
-echo "✓ Native binary ready: $NATIVE_BIN"
-
-# 2. Compile Java Subsystems
 ONNX_DIR="$ROOT/glyvex-linux-onnx-stage"
+NATIVE_SRC="$ROOT/glyvex-linux-touchpad/native/linux/touchpad/glyvex_touchpad.c"
+NATIVE_BIN="$ROOT/glyvex-linux-touchpad/native/linux/touchpad/glyvex-touchpad"
 CP_FILE="$ONNX_DIR/target/classpath.txt"
+CLASSES="$ONNX_DIR/target/classes"
+TEST_CLASSES="$ONNX_DIR/target/test-classes"
 
-if [[ ! -f "$CP_FILE" ]]; then
-  echo "ERROR: Classpath file not found: $CP_FILE"
-  exit 1
+printf '\n============================================================\n'
+printf 'GLYPHX: BUILDING DESKTOP RUNTIME\n'
+printf '============================================================\n'
+mkdir -p "$(dirname "$NATIVE_BIN")" "$ONNX_DIR/target" "$CLASSES" "$TEST_CLASSES"
+
+echo "[1/4] Compiling native Linux touchpad reader..."
+gcc -Wall -Wextra -O2 "$NATIVE_SRC" -o "$NATIVE_BIN"
+
+echo "[2/4] Resolving Maven dependencies (JavaFX, ONNX Runtime, Jackson)..."
+mvn -q -f "$ONNX_DIR/pom.xml" dependency:build-classpath -Dmdep.outputFile="$CP_FILE"
+[[ -s "$CP_FILE" ]] || { echo "ERROR: Maven did not generate $CP_FILE" >&2; exit 1; }
+CP="$(cat "$CP_FILE")"
+
+echo "[3/4] Compiling Java runtime and native JavaFX interface..."
+rm -rf "$CLASSES" "$TEST_CLASSES"
+mkdir -p "$CLASSES" "$TEST_CLASSES"
+java "$ONNX_DIR/scripts/CompileAll.java" "$ONNX_DIR/src" "$CLASSES" "$CP"
+
+if [[ -f "$ONNX_DIR/tests/CommandRegistrySmokeTest.java" ]]; then
+  javac -encoding UTF-8 -cp "$CLASSES:$CP" -d "$TEST_CLASSES" "$ONNX_DIR/tests/CommandRegistrySmokeTest.java"
 fi
 
-echo "[2/3] Compiling Java classes (FSM, Capture, ML, Commands, UI, App)..."
-java "$ONNX_DIR/scripts/CompileAll.java" "$ONNX_DIR/src" "$ONNX_DIR/target/classes" "$(cat "$CP_FILE")"
-echo "✓ Java classes compiled to: $ONNX_DIR/target/classes"
-
-# 3. Run Automated Regression Test Suite
-echo "[3/3] Running automated regression test suite..."
-java --enable-native-access=ALL-UNNAMED \
-  -cp "$ONNX_DIR/target/classes:$(cat "$CP_FILE")" \
-  com.glyvex.test.PipelineIntegrationTest
-
-echo "============================================================"
-echo "BUILD COMPLETE: All GLYVEX subsystems verified successfully!"
-echo "============================================================"
+echo "[4/4] Running automated regression tests..."
+RUNTIME_CP="$CLASSES:$TEST_CLASSES:$CP"
+java --enable-native-access=ALL-UNNAMED -cp "$RUNTIME_CP" com.glyvex.touchpad.demo.SelfTest
+java --enable-native-access=ALL-UNNAMED -cp "$RUNTIME_CP" com.glyvex.ml.RasterizerSelfTest
+java --enable-native-access=ALL-UNNAMED -cp "$RUNTIME_CP" com.glyvex.test.PipelineIntegrationTest
+if [[ -f "$TEST_CLASSES/CommandRegistrySmokeTest.class" ]]; then
+  java --enable-native-access=ALL-UNNAMED -cp "$RUNTIME_CP" CommandRegistrySmokeTest
+fi
+printf '\nBUILD COMPLETE — JavaFX desktop runtime is ready.\n'

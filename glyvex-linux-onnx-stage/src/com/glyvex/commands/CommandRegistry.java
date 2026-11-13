@@ -1,26 +1,26 @@
 package com.glyvex.commands;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 /**
- * Thread-safe allowlist command registry and process executor.
- *
- * Ensures the ML classifier never executes arbitrary shell text,
- * but only pre-approved, benign desktop operations.
+ * Thread-safe command allowlist. The classifier can only select a configured
+ * character mapping; it cannot supply a command or shell string itself.
  */
 public final class CommandRegistry {
     private final Map<String, CommandAction> registry = new ConcurrentHashMap<>();
     private volatile boolean emergencyKillSwitch = false;
     private volatile boolean globalDryRun = false;
-    private BiConsumer<String, CommandAction> onExecuteListener;
+    private volatile BiConsumer<String, CommandAction> onExecuteListener;
 
     public static CommandRegistry createDefaultLinux() {
         CommandRegistry r = new CommandRegistry();
-        // Safe, benign desktop applications for Linux desktop
         r.register("C", CommandAction.of("CALC", "Calculator", "gnome-calculator"));
         r.register("B", CommandAction.of("BROWSER", "Web Browser", "xdg-open", "https://google.com"));
         r.register("F", CommandAction.of("FILES", "File Manager", "xdg-open", System.getProperty("user.home")));
@@ -41,7 +41,7 @@ public final class CommandRegistry {
     }
 
     public CommandAction getCommand(String symbol) {
-        return symbol != null ? registry.get(symbol.trim().toUpperCase()) : null;
+        return symbol == null ? null : registry.get(symbol.trim().toUpperCase());
     }
 
     public boolean execute(String symbol) {
@@ -49,7 +49,6 @@ public final class CommandRegistry {
             System.err.println("[GLYVEX SECURITY] Execution blocked: Emergency Kill Switch is ACTIVE.");
             return false;
         }
-
         if (symbol == null) return false;
         String key = symbol.trim().toUpperCase();
         CommandAction action = registry.get(key);
@@ -57,83 +56,91 @@ public final class CommandRegistry {
             System.out.println("[GLYVEX REGISTRY] No allowlisted command mapped for symbol: '" + key + "'");
             return false;
         }
-
-        if (onExecuteListener != null) {
-            try {
-                onExecuteListener.accept(key, action);
-            } catch (Exception ex) {
-                System.err.println("[GLYVEX REGISTRY] Listener error: " + ex.getMessage());
-            }
+        BiConsumer<String, CommandAction> listener = onExecuteListener;
+        if (listener != null) {
+            try { listener.accept(key, action); }
+            catch (Exception ex) { System.err.println("[GLYVEX REGISTRY] Listener error: " + ex.getMessage()); }
         }
 
         if (globalDryRun || action.dryRun()) {
             System.out.println("[GLYVEX REGISTRY] (DRY RUN) Would execute: " + action.displayName()
-                    + " [" + String.join(" ", action.commandLine()) + "]");
+                    + " [" + previewVector(action) + "]");
             return true;
         }
 
-        // Asynchronous launch in background daemon thread
-        Thread launcher = new Thread(() -> {
-            try {
-                System.out.println("[GLYVEX EXECUTOR] Launching " + action.displayName() + "...");
-                ProcessBuilder pb = new ProcessBuilder(action.commandLine());
-                // Avoid hanging stdin/stdout
-                pb.redirectErrorStream(true);
-                Process process = pb.start();
-                System.out.println("[GLYVEX EXECUTOR] Successfully spawned PID " + process.pid() + " for " + action.id());
-            } catch (IOException ex) {
-                System.err.println("[GLYVEX EXECUTOR] Could not launch " + action.displayName()
-                        + " (" + ex.getMessage() + ")");
-                // Fallback attempt for standard commands: try xdg-open if specific binary was not found
-                attemptFallback(action);
-            }
-        }, "glyvex-cmd-" + action.id());
+        final List<String> launchVector;
+        try {
+            launchVector = buildLaunchVector(action);
+        } catch (IllegalStateException ex) {
+            System.err.println("[GLYVEX SECURITY] " + ex.getMessage());
+            return false;
+        }
+        Thread launcher = new Thread(() -> launch(action, launchVector), "glyvex-cmd-" + action.id());
         launcher.setDaemon(true);
         launcher.start();
         return true;
     }
 
-    private void attemptFallback(CommandAction action) {
-        if ("CALC".equals(action.id())) {
-            tryFallback("kcalc", "xcalc");
-        } else if ("TERMINAL".equals(action.id())) {
-            tryFallback("gnome-terminal", "konsole", "xterm");
-        } else if ("EDITOR".equals(action.id())) {
-            tryFallback("kate", "mousepad", "nano");
+    private String previewVector(CommandAction action) {
+        String prefix = action.useSudo() ? "pkexec " : "";
+        if (action.useShell()) return prefix + "/bin/bash -lc " + action.commandLine().get(0);
+        return prefix + String.join(" ", action.commandLine());
+    }
+
+    private List<String> buildLaunchVector(CommandAction action) {
+        List<String> vector;
+        if (action.useShell()) {
+            vector = List.of("/bin/bash", "-lc", action.commandLine().get(0));
+        } else {
+            vector = action.commandLine();
+        }
+        if (action.useSudo()) {
+            String pkexec = findPkexec();
+            if (pkexec == null) {
+                throw new IllegalStateException("Administrator mode requires pkexec (PolicyKit). Install the polkit package; GLYVEX will not silently fall back to an unprompted sudo command.");
+            }
+            java.util.ArrayList<String> elevated = new java.util.ArrayList<>();
+            elevated.add(pkexec);
+            elevated.addAll(vector);
+            return List.copyOf(elevated);
+        }
+        return vector;
+    }
+
+    private String findPkexec() {
+        for (String candidate : List.of("/usr/bin/pkexec", "/bin/pkexec", "/usr/local/bin/pkexec")) {
+            Path path = Path.of(candidate);
+            if (Files.isRegularFile(path) && Files.isExecutable(path)) return candidate;
+        }
+        String pathValue = System.getenv("PATH");
+        if (pathValue != null) {
+            for (String directory : pathValue.split(java.io.File.pathSeparator)) {
+                Path path = Path.of(directory, "pkexec");
+                if (Files.isRegularFile(path) && Files.isExecutable(path)) return path.toString();
+            }
+        }
+        return null;
+    }
+
+    private void launch(CommandAction action, List<String> launchVector) {
+        try {
+            System.out.println("[GLYVEX EXECUTOR] Launching " + action.displayName()
+                    + (action.useSudo() ? " via PolicyKit authorization" : "") + "...");
+            ProcessBuilder pb = new ProcessBuilder(launchVector);
+            pb.redirectErrorStream(true);
+            // Do not leave a child blocked on a pipe if its output is verbose.
+            pb.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+            Process process = pb.start();
+            System.out.println("[GLYVEX EXECUTOR] Process spawned: PID " + process.pid() + " for " + action.id());
+        } catch (IOException | RuntimeException ex) {
+            System.err.println("[GLYVEX EXECUTOR] Could not launch " + action.displayName() + ": " + ex.getMessage());
         }
     }
 
-    private void tryFallback(String... alternatives) {
-        for (String alt : alternatives) {
-            try {
-                Process p = new ProcessBuilder(alt).start();
-                System.out.println("[GLYVEX EXECUTOR] Fallback alternative launched: " + alt + " (PID " + p.pid() + ")");
-                return;
-            } catch (IOException ignored) {}
-        }
-    }
-
-    public void setEmergencyKillSwitch(boolean killSwitch) {
-        this.emergencyKillSwitch = killSwitch;
-    }
-
-    public boolean isEmergencyKillSwitch() {
-        return emergencyKillSwitch;
-    }
-
-    public void setGlobalDryRun(boolean dryRun) {
-        this.globalDryRun = dryRun;
-    }
-
-    public boolean isGlobalDryRun() {
-        return globalDryRun;
-    }
-
-    public void setOnExecuteListener(BiConsumer<String, CommandAction> listener) {
-        this.onExecuteListener = listener;
-    }
-
-    public Map<String, CommandAction> allActions() {
-        return Collections.unmodifiableMap(registry);
-    }
+    public void setEmergencyKillSwitch(boolean killSwitch) { emergencyKillSwitch = killSwitch; }
+    public boolean isEmergencyKillSwitch() { return emergencyKillSwitch; }
+    public void setGlobalDryRun(boolean dryRun) { globalDryRun = dryRun; }
+    public boolean isGlobalDryRun() { return globalDryRun; }
+    public void setOnExecuteListener(BiConsumer<String, CommandAction> listener) { onExecuteListener = listener; }
+    public Map<String, CommandAction> allActions() { return Collections.unmodifiableMap(registry); }
 }

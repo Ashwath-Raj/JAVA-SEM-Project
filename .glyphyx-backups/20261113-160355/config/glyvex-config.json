@@ -1,0 +1,65 @@
+{
+  "activation" : {
+    "sequence" : [ "TOP_LEFT", "TOP_RIGHT", "BOTTOM_RIGHT", "BOTTOM_LEFT" ],
+    "cornerMargin" : 0.28,
+    "interCornerTimeoutMillis" : 4000,
+    "requireReleaseBetweenCorners" : true
+  },
+  "capture" : {
+    "inactivityTimeoutMillis" : 850,
+    "maxGestureDurationMillis" : 5000
+  },
+  "ml" : {
+    "modelPath" : "Dataset/GLYVEX/ml/demo_retrain/onnx/glyvex_demo_char_classifier.onnx",
+    "classesPath" : "Dataset/GLYVEX/ml/demo_retrain/onnx/classes.json",
+    "gatePath" : "Dataset/GLYVEX/ml/demo_retrain/confidence_gate.json",
+    "overrideThreshold" : 0.88
+  },
+  "commands" : {
+    "C" : {
+      "command" : [ "gnome-calculator" ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "C"
+    },
+    "B" : {
+      "command" : [ "xdg-open", "https://google.com" ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "B"
+    },
+    "F" : {
+      "command" : [ "xdg-open", "." ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "F"
+    },
+    "T" : {
+      "command" : [ "x-terminal-emulator" ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "T"
+    },
+    "E" : {
+      "command" : [ "gedit" ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "E"
+    },
+    "L" : {
+      "command" : [ "loginctl", "lock-session" ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "L"
+    },
+    "S" : {
+      "command" : [ "gnome-control-center" ],
+      "sudo" : false,
+      "shell" : false,
+      "name" : "S"
+    }
+  },
+  "debugDir" : "glyvex-linux-onnx-stage/runtime/debug",
+  "dryRun" : false,
+  "notificationsEnabled" : true
+}
